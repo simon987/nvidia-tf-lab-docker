@@ -1,0 +1,9 @@
+opencv-python
+sklearn
+matplotlib
+numpy
+pandas
+tqdm
+git+https://github.com/simon987/hexlib.git
+networkx
+jupyterlab

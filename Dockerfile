@@ -3,7 +3,7 @@ from nvidia/cuda:11.2.2-base-ubuntu20.04
 ARG CONDA=Anaconda3-2021.05-Linux-x86_64.sh
 
 RUN apt update \
-	&& DEBIAN_FRONTEND=noninteractive apt install -y wget git vim \
+	&& DEBIAN_FRONTEND=noninteractive apt install -y wget git vim ffmpeg libsm6 libxext6 \
 	&& rm -rf /var/lib/apt/lists/*
 
 # User

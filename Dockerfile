@@ -1,9 +1,10 @@
-from nvidia/cuda:11.2.2-base-ubuntu20.04
+from nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
 
 ARG CONDA=Anaconda3-2021.05-Linux-x86_64.sh
 
 RUN apt update \
-	&& DEBIAN_FRONTEND=noninteractive apt install -y wget git vim ffmpeg libsm6 libxext6 \
+	&& DEBIAN_FRONTEND=noninteractive apt install -y \
+	wget curl git vim ffmpeg libsm6 libxext6 ranger \
 	&& rm -rf /var/lib/apt/lists/*
 
 # User
@@ -23,10 +24,11 @@ RUN bash -i -c "conda update -n base -c defaults conda"
 
 # conda env
 RUN bash -i -c "conda create -y -n lab -c conda-forge python=3.9 cudnn=8.1 cudatoolkit=11.2 nodejs && conda clean --force-pkgs-dirs -y && conda clean --all -y"
-RUN bash -i -c "conda activate lab; pip install --no-cache-dir tensorflow-gpu==2.6.1"
+RUN bash -i -c "conda activate lab; pip install --no-cache-dir tensorflow-gpu==2.6.2"
 
 COPY requirements.txt .
 RUN bash -i -c "conda activate lab; pip install --no-cache-dir -r requirements.txt"
+RUN bash -i -c "conda activate lab; jupyter nbextension enable --py widgetsnbextension"
 
 COPY lab.sh .
 WORKDIR /lab

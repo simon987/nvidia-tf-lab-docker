@@ -1,6 +1,4 @@
-from nvidia/cuda:11.2.2-cudnn8-runtime-ubuntu20.04
-
-ARG CONDA=Anaconda3-2021.05-Linux-x86_64.sh
+from nvidia/cuda:11.6.0-runtime-ubuntu20.04
 
 RUN apt update \
 	&& DEBIAN_FRONTEND=noninteractive apt install -y \
@@ -14,6 +12,7 @@ RUN mkdir /lab && chown -R lab:lab /lab
 USER lab
 
 # Install conda
+ARG CONDA=Anaconda3-2021.05-Linux-x86_64.sh
 RUN wget --quiet https://repo.anaconda.com/archive/$CONDA && \
 	chmod +x "./$CONDA" && \
 	"./$CONDA" -b -p ~/anaconda && \
@@ -23,8 +22,9 @@ RUN wget --quiet https://repo.anaconda.com/archive/$CONDA && \
 RUN bash -i -c "conda update -n base -c defaults conda"
 
 # conda env
-RUN bash -i -c "conda create -y -n lab -c conda-forge python=3.9 cudnn=8.1 cudatoolkit=11.2 nodejs && conda clean --force-pkgs-dirs -y && conda clean --all -y"
-RUN bash -i -c "conda activate lab; pip install --no-cache-dir tensorflow-gpu==2.6.2"
+RUN bash -i -c "conda create -y -n lab -c conda-forge python=3.9 cudnn=8.2 cudatoolkit=11.3 nodejs && conda clean --force-pkgs-dirs -y && conda clean --all -y"
+RUN bash -i -c "conda activate lab; conda install -c pytorch pytorch torchvision torchaudio cudatoolkit=11.3"
+RUN bash -i -c "conda activate lab; pip install --no-cache-dir tensorflow-gpu==2.8.0"
 
 COPY requirements.txt .
 RUN bash -i -c "conda activate lab; pip install --no-cache-dir -r requirements.txt"
